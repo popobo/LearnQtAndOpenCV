@@ -24,10 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        widget.cpp
+        widget.cpp \
+    MatView.cpp
 
 HEADERS += \
-        widget.h
+        widget.h \
+    MatView.h
 
 FORMS += \
         widget.ui
@@ -42,3 +44,14 @@ LIBS += $$PWD/opencv/lib/libopencv_world.so
 LIBPATH += $$PWD/opencv/lib
 
 QMAKE_RPATHDIR += $$PWD/opencv/lib
+
+MOC_DIR = $$PWD/build/temp/moc
+RCC_DIR = $$PWD/build/temp/rcc
+UI_DIR = $$PWD/build/temp/ui
+OBJECTS_DIR = $$PWD/build/temp/obj
+
+CONFIG(debug, debug|release){
+    DESTDIR = $$PWD/build/debug
+}else{
+    DESTDIR = $$PWD/build/release
+}
