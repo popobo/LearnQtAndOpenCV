@@ -54,6 +54,29 @@ int main(int argc, char *argv[])
         }
     }
     printMs(std::to_string(__LINE__));
+    //use at mathod to traverse, when access is out of bounds, there is not exception, strange
+    try {
+        for (int row = 0; row < mat.rows; row++) {
+            for (int col = 0; col < mat.cols; col++) {
+                auto& m = mat.at<Vec3b>(row, col);
+                m[0] = 200;
+                m[1] = 200;
+                m[3] = 111;
+            }
+        }
+    } catch(Exception &ex) {
+        std::cout << ex.what() << std::endl;
+    }
+    printMs(std::to_string(__LINE__));
+
+    auto it = mat.begin<Vec3b>();
+    auto end = mat.end<Vec3b>();
+    for (; it!=end; it++){
+        (*it).val[0] = 0;
+        (*it).val[1] = 0;
+        (*it).val[2] = 0;
+    }
+    printMs(std::to_string(__LINE__));
     namedWindow("mat");
     imshow("mat", mat);
     waitKey(0);
