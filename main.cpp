@@ -44,6 +44,16 @@ int main(int argc, char *argv[])
         }
     }
     printMs(std::to_string(__LINE__));
+    //使用ptr遍历Mat
+    for (int row = 0; row < mat.rows; row++) {
+        for (int col = 0; col < mat.cols; col++) {
+            auto matPtr = mat.ptr<Vec3b>(row, col);
+            matPtr->val[0] = 0;
+            matPtr->val[1] = 255;
+            matPtr->val[2] = 0;
+        }
+    }
+    printMs(std::to_string(__LINE__));
     namedWindow("mat");
     imshow("mat", mat);
     waitKey(0);
