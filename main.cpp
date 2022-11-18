@@ -22,6 +22,19 @@ void printMs(const std::string& text = "") {
     last = getTickCount();
 }
 
+// a对比度1.0-3.0，b亮度0-100
+void changeGain(float a, int b, const Mat& src, Mat& des) {
+
+    des.create(src.rows, src.cols, src.type());
+
+    for (int r=0;r<src.rows;r++){
+        for(int c=0;c<src.cols;c++){
+            for(int i=0;i<3;i++){
+                des.at<Vec3b>(r, c)[i]=saturate_cast<uchar>(a*src.at<Vec3b>(r,c)[i]+b);
+            }
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -30,21 +43,23 @@ int main(int argc, char *argv[])
     w.show();
 
     Mat src = imread("1.png");
-    // cvtColor(src, src, COLOR_BayerBG2GRAY); 错误
-    Mat gray;
-    cvtColor(src, gray, COLOR_BGR2GRAY);
-    Mat bin;
-    // 二进制阈值化
-    //threshold(gray, bin, 100, 255, THRESH_BINARY);
-    // 反二进制阈值化
-    threshold(gray, bin, 100, 255, THRESH_BINARY_INV);
+    Mat des;
+    printMs("1");
+    changeGain(1, 100, src, des);
+    printMs("2");
+    Mat des2;
+    printMs("3");
+    src.convertTo(des2, -1, 1.0, 100);
+    printMs("4");
 
     namedWindow("src");
     imshow("src", src);
 
-    namedWindow("bin");
-    imshow("bin", bin);
+    namedWindow("des");
+    imshow("des", des);
 
+    namedWindow("des2");
+    imshow("des2", des2);
 
     waitKey(0);
     return a.exec();
