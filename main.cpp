@@ -22,16 +22,6 @@ void printMs(const std::string& text = "") {
     last = getTickCount();
 }
 
-void RGBToGray(const Mat& src, Mat& des) {
-    // GRay = (R*30+G*59+B*11+50)/100
-    des.create(src.rows, src.cols, CV_8UC1);
-    for (int r=0;r<src.rows;r++) {
-        for(int c=0;c<src.cols;c++){
-            const Vec3b& m=src.at<Vec3b>(r, c);
-            des.at<uchar>(r, c) = (m[2]*30+m[1]*59+m[0]*11+50)/100;
-        }
-    }
-}
 
 int main(int argc, char *argv[])
 {
@@ -40,24 +30,21 @@ int main(int argc, char *argv[])
     w.show();
 
     Mat src = imread("1.png");
+    // cvtColor(src, src, COLOR_BayerBG2GRAY); 错误
     Mat gray;
-    printMs();
-    // first cvtColor costs more time due to init
     cvtColor(src, gray, COLOR_BGR2GRAY);
-    printMs(std::to_string(__LINE__));
-    Mat mygray;
-    printMs(std::to_string(__LINE__));
-    RGBToGray(src, mygray);
-    printMs(std::to_string(__LINE__));
+    Mat bin;
+    // 二进制阈值化
+    //threshold(gray, bin, 100, 255, THRESH_BINARY);
+    // 反二进制阈值化
+    threshold(gray, bin, 100, 255, THRESH_BINARY_INV);
 
     namedWindow("src");
     imshow("src", src);
 
-    namedWindow("gray");
-    imshow("gray", gray);
+    namedWindow("bin");
+    imshow("bin", bin);
 
-    namedWindow("mygray");
-    imshow("mygray", mygray);
 
     waitKey(0);
     return a.exec();
