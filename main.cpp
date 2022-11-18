@@ -7,6 +7,21 @@
 
 using namespace cv;
 
+void printMs(const std::string& text = "") {
+    static long long last = 0;
+    long long cur = getTickCount();
+    if (last == 0) {
+        last = cur;
+        return;
+    }
+    long long ms;
+    ms = ((double)(cur - last) / getTickFrequency()) * 1000;
+    if (text != "") {
+        std::cout << text << " " << ms << "ms" << std::endl;
+    }
+    last = getTickCount();
+}
+
 void RGBToGray(const Mat& src, Mat& des) {
     // GRay = (R*30+G*59+B*11+50)/100
     des.create(src.rows, src.cols, CV_8UC1);
@@ -26,9 +41,14 @@ int main(int argc, char *argv[])
 
     Mat src = imread("1.png");
     Mat gray;
+    printMs();
+    // first cvtColor costs more time due to init
     cvtColor(src, gray, COLOR_BGR2GRAY);
+    printMs(std::to_string(__LINE__));
     Mat mygray;
+    printMs(std::to_string(__LINE__));
     RGBToGray(src, mygray);
+    printMs(std::to_string(__LINE__));
 
     namedWindow("src");
     imshow("src", src);
