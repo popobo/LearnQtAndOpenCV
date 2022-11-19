@@ -28,19 +28,14 @@ int main(int argc, char *argv[]) {
     w.show();
 
     Mat src = imread("1.png");
-    Mat gsrc;
-    pyrDown(src, gsrc);
-    Mat lsrc;
-    pyrUp(src, lsrc);
+    Mat src2 = imread("2.png");
+    Mat des;
+    resize(src2, src2, Size(src.rows, src.cols));
+    float alpha = 0.5;
+    addWeighted(src, alpha, src2, 1 - alpha, 0, des);
 
-    namedWindow("src");
-    imshow("src", src);
-
-    namedWindow("gsrc");
-    imshow("gsrc", gsrc);
-
-    namedWindow("lsrc");
-    imshow("lsrc", lsrc);
+    namedWindow("des");
+    imshow("des", des);
 
     waitKey(0);
     return a.exec();
