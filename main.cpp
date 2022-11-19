@@ -23,20 +23,20 @@ void printMs(const std::string &text = "") {
 }
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-    Widget w;
-    w.show();
 
     Mat src = imread("1.png");
-    Mat src2 = imread("2.png");
     Mat des;
-    resize(src2, src2, Size(src.rows, src.cols));
-    float alpha = 0.5;
-    addWeighted(src, alpha, src2, 1 - alpha, 0, des);
+    cv::rotate(src, des, ROTATE_180);
+
+    Mat des1;
+    cv::flip(src, des1, 0);
 
     namedWindow("des");
     imshow("des", des);
 
+    namedWindow("des1");
+    imshow("des1", des1);
+
     waitKey(0);
-    return a.exec();
+    return 0;
 }
