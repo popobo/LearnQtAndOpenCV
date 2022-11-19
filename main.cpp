@@ -23,30 +23,38 @@ void printMs(const std::string &text = "") {
 }
 
 int main(int argc, char *argv[]) {
+    VideoCapture videoCapture;
+    videoCapture.open("test.mp4");
+    if (!videoCapture.isOpened()) {
+        std::cout << "failed to open video" << std::endl;
+        getchar();
+        return -1;
+    }
+    std::cout << "open video successfully" << std::endl;
 
-    Mat src1 = imread("1.png");
-    Mat src2 = imread("2.png");
+    namedWindow("video");
+    Mat frame;
+    for (;;) {
+        //        if (!videoCapture.read(frame)) {
+        //            break;
+        //        }
+        // 读帧和解码
+        if (!videoCapture.grab()) {
+            break;
+        }
+        // 转换色彩格式
+        if (!videoCapture.retrieve(frame)) {
+            break;
+        }
 
-    int desRows = src1.rows;
-    int newSrc2Cols = (float)src2.cols * ((float)desRows / (float)src2.rows);
-    resize(src2, src2, Size(desRows, newSrc2Cols));
+        if (frame.empty()) {
+            break;
+        }
+        imshow("video", frame);
+        waitKey(30);
+    }
 
-    Mat des(desRows, src1.cols + src2.cols, src1.type());
+    getchar();
 
-    Mat r1 = des(Rect(0, 0, src1.cols, src1.rows));
-    Mat r2 = des(Rect(src1.cols, 0, src2.cols, src2.rows));
-    src1.copyTo(r1);
-    src2.copyTo(r2);
-
-    namedWindow("src1");
-    imshow("src1", src1);
-
-    namedWindow("src2");
-    imshow("src2", src2);
-
-    namedWindow("des");
-    imshow("des", des);
-
-    waitKey(0);
     return 0;
 }
