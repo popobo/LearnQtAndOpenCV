@@ -24,18 +24,28 @@ void printMs(const std::string &text = "") {
 
 int main(int argc, char *argv[]) {
 
-    Mat src = imread("1.png");
-    Mat des;
-    cv::rotate(src, des, ROTATE_180);
+    Mat src1 = imread("1.png");
+    Mat src2 = imread("2.png");
 
-    Mat des1;
-    cv::flip(src, des1, 0);
+    int desRows = src1.rows;
+    int newSrc2Cols = (float)src2.cols * ((float)desRows / (float)src2.rows);
+    resize(src2, src2, Size(desRows, newSrc2Cols));
+
+    Mat des(desRows, src1.cols + src2.cols, src1.type());
+
+    Mat r1 = des(Rect(0, 0, src1.cols, src1.rows));
+    Mat r2 = des(Rect(src1.cols, 0, src2.cols, src2.rows));
+    src1.copyTo(r1);
+    src2.copyTo(r2);
+
+    namedWindow("src1");
+    imshow("src1", src1);
+
+    namedWindow("src2");
+    imshow("src2", src2);
 
     namedWindow("des");
     imshow("des", des);
-
-    namedWindow("des1");
-    imshow("des1", des1);
 
     waitKey(0);
     return 0;
